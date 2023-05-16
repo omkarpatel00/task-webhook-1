@@ -29,12 +29,18 @@ pipeline {
                     sh "docker push 490167669940.dkr.ecr.ap-southeast-1.amazonaws.com/my-ecr-repo-op:${app}-${BUILD_NUMBER}"
                 }
            }
-        stage('Deploy to ECS'){
-            steps {
-                script{
-                    sh 'aws ecs create-service --cluster my-ecs-cluster --region ap-southeast-1 --service-name spring-boot-op --task-definition maven-java-ecs:1 --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-0e77eeb788c39c2e1,subnet-0db3df67469140989],securityGroups=[sg-00c2fb476b45110b8],assignPublicIp=ENABLED}"'
-                }
-            }
+        stage('Snyk Test') {
+            steps {
+                echo 'Snyk Testing...'
+                snykSecurity (
+                    projectName: 'omkarpatel00', 
+                    snykInstallation: 'snyk@latest', 
+                    snykTokenId: 'snyk-slave-api',
+                    failOnIssues: false
+
+                )
+            }
+          }
         }
     }
 }
