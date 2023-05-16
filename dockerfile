@@ -1,5 +1,5 @@
 #start with base image
-FROM openjdk:11
+FROM openjdk:17.0.2
 
 #add maintainer
 #MAINTAINER Omkar Patel <omkarr.patels@gmail.com>
